@@ -25,9 +25,6 @@ parks <- st_read("TA_PARK_ECORES_PA_SVW.geojson") # one way
 parks_json <- fromJSON(paste(readLines("TA_PARK_ECORES_PA_SVW.geojson"), collapse = ""))
 class(parks)
 
-# extracting only provincial parks
-pp_parks <- parks[parks$PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK",]
-parks_geom <- st_geometry(pp_parks) # adding geometry column
 # convert to text
 parks_wkt <- st_as_text(parks_geom)
 parks_wkt <- readRDS("parks_wkt") # read saved from disk
