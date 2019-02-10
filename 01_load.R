@@ -21,10 +21,10 @@ Sys.setenv(GBIF_EMAIL = "jgalloway@uvic.ca")
 ## GEO
 ## --
 # pass in geojson file
-parks <- st_read("TA_PARK_ECORES_PA_SVW.geojson") # one way
-parks_json <- fromJSON(paste(readLines("TA_PARK_ECORES_PA_SVW.geojson"), collapse = ""))
-class(parks)
+install.packages("remotes")
+remotes::install_github("bcgov/bcdata")
+library(bcdata)
+bcdc_search("parks")
 
-# convert to text
-parks_wkt <- st_as_text(parks_geom)
-parks_wkt <- readRDS("parks_wkt") # read saved from disk
+parks <- bcdc_get_geodata("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
+class(parks)
