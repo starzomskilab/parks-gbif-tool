@@ -1,24 +1,22 @@
-## --
-## BCPARKS/RGBIF SPATIAL DATA ACQUISITON TOOL
-## --
+##
+## BCPARKS/RGBIF SPATIAL DATA ACQUISITON TOOL ----------------------
+## 
 
-## PACKAGES
+# load packages
 Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "dplyr", "maptools",
-              "devtools", "wellknown","geojsonsf", "leaflet", "jsonlite",
+              "devtools", "wellknown","geojsonsf", "leaflet", "jsonlite", "rgbif",
               "geojsonio", "rgbif", "rmapshaper", "RColorBrewer", "RCurl", "bcmaps")
 lapply(Packages, library, character.only = TRUE)
 
-## --
-## SETTING ENVIRONMENT 
+## ENVIRONMENT SETTINGS ----------------------------------------
 ## *Note: Fill in the variables below with your own username/pwd
-## --
+## 
 # user_renviron <- path.expand(file.path("~", ".Renviron"))
 Sys.setenv(GBIF_USER = "jgalloway93")
 #Sys.setenv(GBIF_PWD = ******)
 Sys.setenv(GBIF_EMAIL = "jgalloway@uvic.ca")
 
-## --
-## GEO
+## LOADING DATA --------------------------------
 ## --
 # pass in geojson file
 install.packages("remotes")
