@@ -1,30 +1,25 @@
-## --
-## DATA PREP AND CLEANING
-## --
+##
+## DATA PREP AND CLEANING ---------------------------
+## 
+
 # extracting only provincial parks
-pp_parks <- parks[parks$PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK",]
-class(pp_parks)
+pp_parks <- parks_simplified[parks_simplified$PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK",]
 parks_geom <- st_geometry(pp_parks) # adding geometry column
+
+# simplify parks geometry
+parks_simplified <- ms_simplify(parks_geom)
+class(parks_simplified)
+
+
+
 
 # convert to text
 parks_wkt <- st_as_text(parks_geom)
-#saveRDS(parks_wkt, file = "parks-wkt")
-#parks_wkt <- readRDS("parks_wkt") # read saved from disk
+# saveRDS(parks_wkt, file = "parks-wkt")
+# parks_wkt <- readRDS("parks_wkt") # read saved from disk
 
-# arrange
-bysize <- pp_parks %>% arrange(desc(FEATURE_AREA_SQM))
-
-# extracting tweedsmuir 
-tweed <- pp_parks[pp_parks$ADMIN_AREA_SID == "1188",]
-class(tweed)
-tweed_geom <- st_geometry(tweed) # add geometry column
-tweed_wkt <- st_as_text(tweed_geom)
-class(tweed_geom)
-plot(tweed_geom)
-
-####################################
-# OTHER FORMATS
-####################################
+## OTHER FORMATS -------------------------------------------
+##
 # convert to spatial df
 parks_sp <- as(pp_parks, "Spatial")
 glimpse(parks_sp)
@@ -39,7 +34,7 @@ class(pp_parks)
 summary(geo_parks)
 
 # chloropleth
-leaflet(parks_sp) %>%
+leaflet(parks_simplified) %>%
   addTiles() %>%
   addPolygons(color = "#3333333", weight = 1, smoothFactor = 0.5)
 
