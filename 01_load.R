@@ -19,8 +19,8 @@ Sys.setenv(GBIF_EMAIL = "jgalloway@uvic.ca")
 ## LOADING DATA --------------------------------
 ## --
 # pass in geojson file
-install.packages("remotes")
-remotes::install_github("bcgov/bcdata")
+# install.packages("remotes")
+# remotes::install_github("bcgov/bcdata")
 library(bcdata)
 bcdc_search("parks")
 
