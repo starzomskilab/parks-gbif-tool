@@ -1,17 +1,15 @@
 ##
 ## DATA PREP AND CLEANING ---------------------------
 ## 
-
 # extracting only provincial parks
-pp_parks <- parks_simplified[parks_simplified$PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK",]
-parks_geom <- st_geometry(pp_parks) # adding geometry column
+prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK")
+
+# add geometry column
+prov_parks <- st_geometry(prov_parks)
 
 # simplify parks geometry
-parks_simplified <- ms_simplify(parks_geom)
-class(parks_simplified)
-
-
-
+parks_geom <- ms_simplify(prov_parks)
+plot(parks_geom)
 
 # convert to text
 parks_wkt <- st_as_text(parks_geom)
