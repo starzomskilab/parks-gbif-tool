@@ -21,8 +21,7 @@ Sys.setenv(GBIF_EMAIL = "jgalloway@uvic.ca")
 # pass in geojson file
 # install.packages("remotes")
 # remotes::install_github("bcgov/bcdata")
-library(bcdata)
-bcdc_search("parks")
 
+# Download BC parks data as sfc
 parks <- bcdc_get_geodata("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
 class(parks)
