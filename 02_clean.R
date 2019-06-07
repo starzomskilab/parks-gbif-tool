@@ -8,8 +8,8 @@ prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK")
 prov_parks <- st_geometry(prov_parks)
 
 # simplify parks geometry
-parks_geom <- ms_simplify(prov_parks)
-plot(parks_geom)
+parks_simp <- ms_simplify(prov_parks, keep = 0.25)
+plot(parks_simp)
 
 # convert to text
 parks_wkt <- st_as_text(parks_geom)
