@@ -2,7 +2,8 @@
 ## DATA PREP AND CLEANING ---------------------------
 ## 
 # extracting only provincial parks
-prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK")
+prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>%
+  rename_all(tolower)
 
 # simplify parks geometry
 parks_simp <- ms_simplify(prov_parks, keep = 0.25)
