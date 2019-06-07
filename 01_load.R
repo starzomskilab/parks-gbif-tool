@@ -3,9 +3,10 @@
 ## 
 
 # load packages
-Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "dplyr", "maptools",
-              "devtools", "wellknown","geojsonsf", "leaflet", "jsonlite", "rgbif",
-              "geojsonio", "rgbif", "rmapshaper", "RColorBrewer", "RCurl", "bcmaps")
+Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "dplyr", 
+              "maptools", "devtools", "wellknown","geojsonsf", "leaflet", 
+              "jsonlite", "rgbif", "geojsonio", "bcdata", "rmapshaper", 
+              "RColorBrewer", "RCurl", "bcmaps")
 lapply(Packages, library, character.only = TRUE)
 
 ## ENVIRONMENT SETTINGS ----------------------------------------
@@ -22,6 +23,7 @@ Sys.setenv(GBIF_EMAIL = "jgalloway@uvic.ca")
 # install.packages("remotes")
 # remotes::install_github("bcgov/bcdata")
 
-# Download BC parks data as sfc
+# Download BC parks data as sf
 parks <- bcdc_get_geodata("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
 class(parks)
+plot(st_geometry)
