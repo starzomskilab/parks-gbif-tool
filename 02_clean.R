@@ -7,7 +7,6 @@ prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>
 
 # simplify parks geometry
 parks_simp <- ms_simplify(prov_parks, keep = 0.25)
-plot(parks_simp)
 
 # create list of parks
 park_names <- unique(prov_parks$protected_lands_name)
@@ -24,14 +23,18 @@ make_park_wkt <- function(data) {
 
 # map call
 park_wkts <- map(park_names, ~ {
-  data <- filter(prov_parks, protected_lands_name == .x)
+  data <- filter(parks_simp, protected_lands_name == .x)
   make_park_wkt(data, .x)
 })
 
-# convert to text
-parks_wkt <- st_as_text(parks_geom)
+## trying with super simple geometry
+parks_geom <- st_geometry(prov_parks)
+parks_geom_simp <- ms_simplify(parks_geom, keep = 0.01)
+plot(parks_geom_simp)
 
-# saveRDS(parks_wkt, file = "parks-wkt")
+# convert to text
+parks_wkt <- st_as_text(parks_geom_simp)
+saveRDS(parks_wkt, file = "parks_wkt")
 # parks_wkt <- readRDS("parks_wkt") # read saved from disk
 
 ## OTHER FORMATS -------------------------------------------
