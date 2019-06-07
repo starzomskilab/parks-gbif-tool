@@ -6,7 +6,7 @@
 Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "dplyr", 
               "maptools", "devtools", "wellknown","geojsonsf", "leaflet", 
               "jsonlite", "rgbif", "geojsonio", "bcdata", "rmapshaper", 
-              "RColorBrewer", "RCurl", "bcmaps")
+              "RColorBrewer", "RCurl", "bcmaps", "geojson")
 lapply(Packages, library, character.only = TRUE)
 
 ## ENVIRONMENT SETTINGS ----------------------------------------
