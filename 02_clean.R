@@ -15,19 +15,18 @@ park_names <- unique(prov_parks$protected_lands_name)
 park_list <- vector(length = length(park_names), mode = "list")
 names(park_list) <- park_names
 
-# map call
-park_wkts <- map(park_names, ~ {
-  data <- filter(prov_parks, protected_lands_name == .x)
-  data <- st_geometry(data)
-  make_park_wkt(data)
-})
-
 # func
 make_park_wkt <- function(data) {
   # create wkt for single park
   parkwkt <- st_as_text(data)
 }
 
+# map call
+park_wkts <- map(park_names, ~ {
+  data <- filter(prov_parks, protected_lands_name == .x)
+  data <- st_geometry(data)
+  make_park_wkt(data)
+})
 
 park_wkts <- iwalk(park_wkts, make_park_wkt)
 
