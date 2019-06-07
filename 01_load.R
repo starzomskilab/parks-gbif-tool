@@ -13,9 +13,9 @@ lapply(Packages, library, character.only = TRUE)
 ## *Note: Fill in the variables below with your own username/pwd
 ## 
 # user_renviron <- path.expand(file.path("~", ".Renviron"))
-Sys.setenv(GBIF_USER = "jgalloway93")
-#Sys.setenv(GBIF_PWD = ******)
-Sys.setenv(GBIF_EMAIL = "jgalloway@uvic.ca")
+# Sys.setenv(GBIF_USER = "jgalloway93")
+# Sys.setenv(GBIF_PWD = "*********")
+# Sys.setenv(GBIF_EMAIL = "jgalloway@uvic.ca")
 
 ## LOADING DATA --------------------------------
 ## --
