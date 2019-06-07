@@ -25,9 +25,9 @@ make_park_wkt <- function(data) {
 park_wkts <- map(park_names, ~ {
   data <- filter(prov_parks, protected_lands_name == .x)
   data <- st_geometry(data)
+  data <- st_cast(data, "POLYGON")
   make_park_wkt(data)
 })
-
 
 ## trying with super simple geometry
 parks_geom <- st_geometry(prov_parks)
@@ -35,8 +35,8 @@ parks_geom_simp <- ms_simplify(parks_geom, keep = 0.01)
 plot(parks_geom_simp)
 
 # convert to text
-parks_wkt <- st_as_text(parks_geom_simp)
-saveRDS(parks_wkt, file = "parks_wkt")
+parks_wkt_full <- st_as_text(parks_geom_simp)
+saveRDS(parks_wkt_full, file = "parks_wkt_full")
 # parks_wkt <- readRDS("parks_wkt") # read saved from disk
 
 ## OTHER FORMATS -------------------------------------------
