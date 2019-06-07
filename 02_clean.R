@@ -28,7 +28,6 @@ park_wkts <- map(park_names, ~ {
   make_park_wkt(data)
 })
 
-park_wkts <- iwalk(park_wkts, make_park_wkt)
 
 ## trying with super simple geometry
 parks_geom <- st_geometry(prov_parks)
