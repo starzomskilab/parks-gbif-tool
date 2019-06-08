@@ -10,5 +10,6 @@ for (i in seq_along(park_wkts)) {
   )
 }
 
-out <- occ_download_queue(geometry = parks_wkt)
-occ_download_get()
+# launch download cue
+out <- occ_download_queue(.list = queries)
+out
