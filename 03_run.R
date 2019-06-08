@@ -3,6 +3,7 @@
 queries <- list()
 for (i in seq_along(park_wkts)) {
   queries[[i]] <- occ_download_prep(
+    "type = equals",
     "hasCoordinate = true",
     "hasGeospatialIssue = false",
     paste0("geometry = ", park_wkts[i])
