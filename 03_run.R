@@ -10,17 +10,22 @@ for (i in seq_along(park_wkts)) {
   )
 }
 
-queries[1]
 # launch download cue
-out <- occ_download_queue(.list = queries)
+out <- occ_download_queue(.list = queries, status_ping = 10)
 out
 
 # extract from parks wkt
 discisland <- park_wkts[[1]]
-discisland <- toString(discisland)
 class(discisland)
 library(wellknown)
 discisland <- polygon(discisland)
 
 # download for discovery island
 occ_download("geometry = discisland", "hasCoordinate = true")
+
+# full wkt download
+full_download <- occ_download_queue(
+  occ_download("geometry = parks_wkt_full", "hasGeometry = true")
+)
+full_download
+occ_download("geometry = parks_wkt_full", "hasGeometry = true")
