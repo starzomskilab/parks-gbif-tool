@@ -1,25 +1,30 @@
 ## 
-## TWEEDSMUIR-------------------------
+## EXTRACT SKAHA BLUFFS -------------------------
 ##
-# arrange
-bysize <- pp_parks %>% arrange(desc(FEATURE_AREA_SQM))
+skaha <- filter(parks_simp, protected_lands_name == "SKAHA BLUFFS PARK")
+skaha <- st_geometry(skaha)# add geometry column
+skaha <- st_cast(skaha, "POLYGON")
+skaha_wkt <- st_as_text(skaha)
+skaha_wkt_simp <- geojson2wkt(unclass(wkt2geojson(skaha_wkt, feature = FALSE)), fmt = 5)
 
-# extracting tweedsmuir 
-tweed <- pp_parks[pp_parks$ADMIN_AREA_SID == "1188",]
-class(tweed)
-tweed_geom <- st_geometry(tweed) # add geometry column
-tweed_wkt <- st_as_text(tweed_geom)
-class(tweed_geom)
-plot(tweed_geom)
+# search for data within the parks boundary
+skaha_search <- occ_search(geometry = skaha_wkt_simp, hasCoordinate = T)
+data_tweed <- occ_search(geometry = tweed_wkt, hasCoordinate = T, limit = 4000)
+data_tweed2 <- occ_data(geometry = tweed_wkt, hasCoordinate = T, limit = 4000)
+
+## PLOTTING
+library(lawn)
+skaha_search$data %>% 
+  select(name, decimalLatitude, decimalLongitude) %>% 
+  rename(latitude = decimalLatitude, longitude = decimalLongitude) %>% 
+  geojsonio::geojson_json() %>% 
+  lawn::view()
 
 # spocc - converting to shp
 tweed_sp <- as(tweed, "Spatial")
 class(tweed_sp)
 tweed_poly <- Polygon(tweed_sp)
 
-# attempting to get data from gbif
-species <- occ(geometry = tweed_poly, from = "gbif", limit = 1000)
-species$gbif
 parks_gbif <- occ_download_prep("country = CA", 'basisOfRecord = OBSERVATION', 
                                 "hasCoordinate = true", "hasGeospatialIssue = false")
 summary(parks_gbif)
@@ -44,19 +49,6 @@ plot(tweed_simple) # plot the result
 # convert to latlong
 tweed_simple <- st_transform(tweed_simple, 4326)
 tweed_wkt <- st_as_text(tweed_simple) # convert to wkt
-
-# search for data within the parks boundary
-class(tweed_wkt)
-res <- occ_search(geometry = tweed_wkt, hasCoordinate = T)
-data_tweed <- occ_search(geometry = tweed_wkt, hasCoordinate = T, limit = 4000)
-data_tweed2 <- occ_data(geometry = tweed_wkt, hasCoordinate = T, limit = 4000)
-
-## PLOTTING
-data_tweed$data %>% 
-  select(name, decimalLatitude, decimalLongitude) %>% 
-  rename(latitude = decimalLatitude, longitude = decimalLongitude) %>% 
-  geojsonio::geojson_json() %>% 
-  lawn::view()
 
 ## SAMPLE DOWNLOAD FROM SCKOTT
 occ_download('taxonKey = 7228682', 'hasCoordinate = TRUE', 'hasGeospatialIssue = FALSE', 
@@ -87,5 +79,6 @@ tweed_map <- leaflet(data_tweed2) %>% addTiles() %>%
                    fill = T, colorFactor("Paired"))
 
 # less decimals in wkt! very important
-tweed_wkt_simp <- geojson2wkt(unclass(wkt2geojson(tweed_wkt, feature = FALSE)), fmt = 5)
+wkt_simp <- geojson2wkt(unclass(wkt2geojson(parks_wkt_full, feature = FALSE)), fmt = 5)
+class(parks_wkt_full)
 tweed_wkt_simp
