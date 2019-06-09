@@ -6,11 +6,25 @@ skaha <- st_geometry(skaha)# add geometry column
 skaha <- st_cast(skaha, "POLYGON")
 skaha_wkt <- st_as_text(skaha)
 skaha_wkt_simp <- geojson2wkt(unclass(wkt2geojson(skaha_wkt, feature = FALSE)), fmt = 5)
+skaha_wkt_simp
 
 # search for data within the parks boundary
 skaha_search <- occ_search(geometry = skaha_wkt_simp, hasCoordinate = T)
-data_tweed <- occ_search(geometry = tweed_wkt, hasCoordinate = T, limit = 4000)
-data_tweed2 <- occ_data(geometry = tweed_wkt, hasCoordinate = T, limit = 4000)
+parks_search <- occ_search(geometry = parks_wkt_full, hasCoordinate = T, 
+                           limit = 200)
+skaha_wkt_simp
+# download
+skaha_dl <- occ_download("geometry = POLYGON ((-119.56810 49.42843, -119.56800 49.43797, -119.56820 49.44625, 
+                         -119.55760 49.44621, -119.55730 49.46060, -119.54890 49.46054, -119.54970 49.45899, 
+                         -119.55010 49.45717, -119.54990 49.45651, -119.55040 49.45577, -119.55020 49.45465, 
+                         -119.55090 49.45287, -119.55200 49.45152, -119.55320 49.44921, -119.55450 49.44615, 
+                         -119.55470 49.44305, -119.55540 49.44275, -119.55580 49.44161, -119.55750 49.43965, 
+                         -119.55810 49.43738, -119.55860 49.43539, -119.55830 49.43446, -119.55130 49.43453, 
+                         -119.55130 49.43815, -119.54580 49.43820, -119.54590 49.44185, -119.52370 49.44206, 
+                         -119.52350 49.43482, -119.54020 49.43467, -119.54000 49.42743, -119.56810 49.42715, 
+                         -119.56810 49.42843))", "hasCoordinate = true")
+occ_download_import(key = "0026762-190415153152247")
+occ_download_meta(key = "0026762-190415153152247")
 
 ## PLOTTING
 library(lawn)
@@ -30,15 +44,8 @@ parks_gbif <- occ_download_prep("country = CA", 'basisOfRecord = OBSERVATION',
 summary(parks_gbif)
 
 occ_count(georeferenced = T, country = "CA", basisOfRecord = 'OBSERVATION')
-parks_data <- occ_download("country = CA", 'basisOfRecord = OBSERVATION', 
-                           "hasCoordinate = true", "hasGeospatialIssue = false")
-
-
 
 occ_search(scientificName = 'Ursus americanus', curlopts = list(verbose = TRUE))
-
-polysample <- "POLYGON((-128 48,-121 48,-121 53,-128 53,-128 48))"
-plot(polysample)
 
 ## SOLUTION TO THE SIZE/MULTIPOLYGON PROBLEM --------------
 # cast
