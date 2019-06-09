@@ -28,10 +28,14 @@ park_wkts <- map(park_names, ~ {
   make_park_wkt(data)
 })
 
-## trying with super simple geometry
+## create sfc file of parks with super simple geometry
 parks_geom <- st_geometry(prov_parks)
 parks_geom_simp <- ms_simplify(parks_geom, keep = 0.01)
 plot(parks_geom_simp)
+
+# cast to polygon (instead of multi)
+parks_geom_simp <- st_cast(parks_geom_simp, "POLYGON") # convert multi to single poly
+class(parks_geom_simp)
 
 # convert to text
 parks_wkt_full <- st_as_text(parks_geom_simp)
