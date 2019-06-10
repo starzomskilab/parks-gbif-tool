@@ -5,7 +5,7 @@ prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>
   rename_all(tolower)
 
 # simplify parks geometry
-parks_simp <- ms_simplify(prov_parks, keep = 0.1)
+parks_simp <- ms_simplify(prov_parks, keep = 0.05)
 
 # create list of parks
 park_names <- unique(prov_parks$protected_lands_name)
@@ -19,6 +19,8 @@ make_park_wkt <- function(data) {
   # create wkt for single park
   parkwkt <- st_as_text(data)
 }
+
+tweed_poly[which.max(st_area(tweed_poly))]
 
 # map call
 park_wkts <- map(park_names, ~ {
