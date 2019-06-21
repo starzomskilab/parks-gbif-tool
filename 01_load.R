@@ -2,12 +2,13 @@
 ## BCPARKS/RGBIF SPATIAL DATA ACQUISITON TOOL ----------------------
 ## 
 # load packages
+remotes::install_github("ropensci/wicket@reverse")
 Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "rinat", 
               "maptools", "devtools", "wellknown","geojsonsf", "leaflet", 
               "jsonlite", "rgbif", "geojsonio", "bcdata", "rmapshaper", 
-              "RColorBrewer", "RCurl", "bcmaps", "geojson")
+              "RColorBrewer", "RCurl", "bcmaps", "geojson", "wicket")
 lapply(Packages, library, character.only = TRUE)
-remotes::install_github("ropensci/wicket@reverse")
+library(wicket)
 
 ## ENVIRONMENT SETTINGS ----------------------------------------
 ## *Note: Fill in the variables below with your own username/pwd
