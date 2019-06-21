@@ -1,56 +1,41 @@
 ##
 ## DATA PREP AND CLEANING ---------------------------
+## 
 # extracting only provincial parks
 prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>%
   rename_all(tolower)
 
 # simplify parks geometry
-parks_simp <- ms_simplify(prov_parks, keep = 0.05)
+parks_simp <- ms_simplify(prov_parks, keep = 0.25)
+plot(parks_simp[3])
 
 # create list of parks
 park_names <- unique(prov_parks$protected_lands_name)
 
 # create list to store wkts
-park_list <- vector(length = length(park_names), mode = "list")
-names(park_list) <- park_names
+park_wkts <- vector(length = length(park_names), mode = "list")
+names(park_wkts) <- park_names
 
-# func
-make_park_wkt <- function(data) {
+make_park_wkt <- function(data, name) {
   # create wkt for single park
   parkwkt <- st_as_text(data)
+  parkwkt <- wkt_reverse(parkwkt)
 }
 
-tweed_poly[which.max(st_area(tweed_poly))]
-
-# map call
 park_wkts <- map(park_names, ~ {
   data <- filter(prov_parks, protected_lands_name == .x)
   data <- st_geometry(data)
   data <- st_cast(data, "POLYGON")
   make_park_wkt(data)
 })
-
-## create sfc file of parks with super simple geometry
-parks_geom <- st_geometry(prov_parks)
-parks_geom_simp <- ms_simplify(parks_geom, keep = 0.01)
-plot(parks_geom_simp)
-
-# cast to polygon (instead of multi)
-parks_geom_simp <- st_cast(parks_geom_simp, "POLYGON") # convert multi to single poly
-class(parks_geom_simp)
-
-# convert to text
-parks_wkt_full <- st_as_text(parks_geom_simp)
-saveRDS(parks_wkt_full, file = "parks_wkt_full")
+names(park_wkts) <- park_names
+# saveRDS(parks_wkt, file = "parks-wkt")
 # parks_wkt <- readRDS("parks_wkt") # read saved from disk
 
 ## OTHER FORMATS -------------------------------------------
 ##
 # convert to spatial df
-parks_sp <- as(prov_parks, "Spatial")
-parks_geojson <- geojson_list(parks_sp)
-
-togeojson(input = prov_parks, method = "local", outfilename = "bcgbifmap")
+parks_sp <- as(pp_parks, "Spatial")
 glimpse(parks_sp)
 glimpse(parks)
 as_tibble(parks)
@@ -66,3 +51,8 @@ summary(geo_parks)
 leaflet(parks_simplified) %>%
   addTiles() %>%
   addPolygons(color = "#3333333", weight = 1, smoothFactor = 0.5)
+
+# plot
+ggplot(pp_parks) +
+  geom_sf(aes(fill = FEATURE_AREA_SQM)) +
+  theme_dark()
