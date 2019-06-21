@@ -6,7 +6,7 @@ prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>
   rename_all(tolower)
 
 # simplify parks geometry
-parks_simp <- ms_simplify(prov_parks, keep = 0.25)
+parks_simp <- ms_simplify(prov_parks, keep = 0.05)
 plot(parks_simp[3])
 
 # create list of parks
@@ -23,14 +23,20 @@ make_park_wkt <- function(data, name) {
 }
 
 park_wkts <- map(park_names, ~ {
-  data <- filter(prov_parks, protected_lands_name == .x)
+  data <- filter(parks_simp, protected_lands_name == .x)
   data <- st_geometry(data)
   data <- st_cast(data, "POLYGON")
+  # data <- st_area(which.max(data))
   make_park_wkt(data)
 })
+
 names(park_wkts) <- park_names
 # saveRDS(parks_wkt, file = "parks-wkt")
 # parks_wkt <- readRDS("parks_wkt") # read saved from disk
+
+park_wkts["SKAHA BLUFFS PARK"]
+skaha <- filter(parks_simp, protected_lands_name == "SKAHA BLUFFS PARK")
+skaha <- st_as_text(skaha)
 
 ## OTHER FORMATS -------------------------------------------
 ##
