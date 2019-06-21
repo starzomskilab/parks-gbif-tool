@@ -1,0 +1,89 @@
+---
+title: 'BC Parks iNaturalist Project: Data Downloads: Part 1'
+author: "Julie Galloway"
+date: '2019-06-20'
+output: html_document
+---
+
+This document will provide an introduction on how to download iNaturalist data through the iNaturalist API, using R as an interface. If you're new to R, check out Jenny Bryan's "R for Data Science" tutorials at https://r4ds.had.co.nz/introduction.html. The full code used to query and download iNaturalist data for the BC Parks iNaturalist project can be found on GitHub at https://github.com/starzomskilab/parks-gbif-tool. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# load packages
+Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "dplyr", 
+              "maptools", "devtools", "wellknown","geojsonsf", "leaflet", 
+              "jsonlite", "rgbif", "geojsonio", "bcdata", "rmapshaper", 
+              "RColorBrewer", "RCurl", "bcmaps", "geojson")
+lapply(Packages, library, character.only = TRUE)
+```
+
+## Setup
+
+Packages you may need to download for this exercise include the following:
+
+```{r libraries, echo=FALSE}
+library(tidyverse)
+library(dplyr)
+library(rgbif)
+library(rinat)
+library(wellknown)
+library(rmapshaper)
+remotes::install_github("bcgov/bcdata")
+```
+
+One method of obtaining iNaturalist data in R is through the `rinat` package (https://github.com/ropensci/rinat). An alternative method for downloading all biodiversity data within a park boundary is to use the `rgbif` package, which queries the Global Biodiversity Information Facility (GBIF) databases. 
+
+To use `rgbif`, you will need to provide the username, password, and email address associated with your GBIF account. You can add these details as part of your data query, or set them as environment variables in R. See below:
+
+```{r passwords}
+Sys.setenv(GBIF_USER = "username")
+Sys.setenv(GBIF_PWD = "password")
+Sys.setenv(GBIF_EMAIL = "email@uvic.ca")
+```
+
+## Obtaining Park Boundary Outlines
+
+A shapefile of BC park boundaries can be obtained from the BC Data Catalogue through the `bcdata` package.
+
+```{r parks}
+# Download BC parks data as sf
+parks <- bcdc_get_data("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
+```
+
+The geometry of the BC parks shapefile is very complex; this makes processing slow. To use `rgbif` later, we will need to convert these polygons to text files, and the length of the text files would exceed the length that rgbif accepts. To fix this, we can simplify the geometry using `rmapshaper`. This reduces the complexity and removes extra vertices.
+
+``` {r simplify, echo = T}
+# simplify parks geometry
+prov_parks <- ms_simplify(prov_parks, keep = 0.05)
+plot(prov_parks[3])
+```
+
+## Using the `rinat` Package
+
+The `rinat` package is a handy way to pull datasets from iNaturalist. Unlike `rgbif`, it does not require a username/password. Users are reporting problems when trying to download data for an umbrella project (like "bc-parks"), but for individual projects we can retrieve data this way. 
+
+``` {r rinat, echo = T}
+## Retrieve info about a project
+strathcona <- get_inat_obs_project("strathcona-provincial-park", type = "info", 
+                                  raw = F)
+```
+``` {r rinat download, echo = F}
+## Now retrieve all the observations for that project
+strathcona <- get_inat_obs_project(strathcona$id, 
+                                 type = "observations", raw = F)
+```
+
+You can also retrieve all observations from a particular user this way. This could be good to make a database of observations for each of the team members.
+
+``` {r user example, echo = T}
+get_inat_obs_user("bstarzomski", maxresults = 100)
+```
+
+Alternatively, you can also provide a bounding box for the province (or area of interest) and perform a search that way. 
+
+``` {r search, echo = T}
+# Add bounding box for BC (ymin xmin ymax xmax)
+bbox <- c(48.41931, -130.1369, 55.33395, -122.6331 )
+# Add a query 
+query <- get_inat_obs(query = "fox", bounds = bbox, maxresults = 100)
+```
