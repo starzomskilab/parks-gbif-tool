@@ -10,6 +10,15 @@ Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "rinat",
 lapply(Packages, library, character.only = TRUE)
 library(wicket)
 
+
+# Since this file contains data on all protected areas and parks in the province, 
+# we can narrow it down to provincial parks using. 
+
+# extracting only provincial parks
+prov_parks <- dplyr::filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>%
+  rename_all(tolower)
+
+
 ## ENVIRONMENT SETTINGS ----------------------------------------
 ## *Note: Fill in the variables below with your own username/pwd
 ## 
@@ -17,7 +26,7 @@ library(wicket)
 Sys.setenv(GBIF_USER = "*")
 Sys.setenv(GBIF_PWD = "*")
 Sys.setenv(GBIF_EMAIL = "*")
-Sys.setenv(LIBCURL_BUILD="winssl")
+Sys.setenv(LIBCURL_BUILD="*")
 install.packages('curl', type = "source")
 library(curl)
 
@@ -28,4 +37,5 @@ library(curl)
 # remotes::install_github("bcgov/bcdata")
 
 # Download BC parks data as sf
+bcdc_query_geodata("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
 parks <- bcdc_get_data("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
