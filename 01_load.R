@@ -3,13 +3,15 @@
 ## 
 # load packages
 remotes::install_github("ropensci/wicket@reverse")
+remotes::install_github("ropensci/rinat")
+library(wicket)
+library(rinat)
+
 Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "rinat", 
               "maptools", "devtools", "wellknown","geojsonsf", "leaflet", 
               "jsonlite", "rgbif", "geojsonio", "bcdata", "rmapshaper", 
               "RColorBrewer", "RCurl", "bcmaps", "geojson", "wicket")
 lapply(Packages, library, character.only = TRUE)
-library(wicket)
-
 
 # Since this file contains data on all protected areas and parks in the province, 
 # we can narrow it down to provincial parks using. 
@@ -30,6 +32,7 @@ Sys.setenv(LIBCURL_BUILD="*")
 install.packages('curl', type = "source")
 library(curl)
 
+## --
 ## LOADING DATA --------------------------------
 ## --
 # pass in geojson file
