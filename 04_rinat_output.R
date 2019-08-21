@@ -5,8 +5,7 @@ strathcona <- get_inat_obs_project("strathcona-provincial-park",
 allparks <- get_inat_obs_project("bc-parks", type = "info", raw = T)
 
 ## Now retrieve all the observations for that project
-strathcona <- get_inat_obs_project(strathcona$id, 
-                                 type = "observations", raw = F)
+strathcona <- get_inat_obs_project(strathcona$id, type = "observations", raw = T)
 
 ## Find user
 starzom <- get_inat_obs_user("bstarzomski", maxresults = 15)
