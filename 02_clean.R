@@ -7,7 +7,7 @@ prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>
 
 # simplify parks geometry
 parks_simp <- ms_simplify(prov_parks, keep = 0.05)
-plot(parks_simp[3])
+plot(parks_simp[15])
 
 # create list of parks
 park_names <- unique(prov_parks$protected_lands_name)
@@ -37,6 +37,8 @@ names(park_wkts) <- park_names
 park_wkts["SKAHA BLUFFS PARK"]
 skaha <- filter(parks_simp, protected_lands_name == "SKAHA BLUFFS PARK")
 skaha <- st_as_text(skaha)
+
+beaton <- park_wkts["BEATTON RIVER PARK"]
 
 ## OTHER FORMATS -------------------------------------------
 ##
