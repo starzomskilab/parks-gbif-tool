@@ -1,11 +1,17 @@
+## ---
 ## Using rinat
+## ---
 ## Retrieve info about a project
-strathcona <- get_inat_obs_project("strathcona-provincial-park", 
-                                   type = "info", raw = T)
-allparks <- get_inat_obs_project("bc-parks", type = "info", raw = T)
-
+sample <- get_inat_obs_project("montague-provincial-park", 
+                                   type = "info", raw = F)
 ## Now retrieve all the observations for that project
-strathcona <- get_inat_obs_project(strathcona$id, type = "observations", raw = T)
+sample <- get_inat_obs_project(sample$id, type = "observations", 
+                                   raw = T)
+
+allparks <- get_inat_obs_project("bc-parks", type = "info", raw = T)
+# allparks <- get_inat_obs_project(allparks$id)
+
+
 
 ## Find user
 starzom <- get_inat_obs_user("bstarzomski", maxresults = 15)
