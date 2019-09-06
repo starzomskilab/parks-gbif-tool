@@ -1,12 +1,17 @@
 ##
 ## BCPARKS/RGBIF SPATIAL DATA ACQUISITON TOOL ----------------------
 ## 
-# load packages
+library(devtools)
+# dev_mode(on = T)
+
+# load pkgs from github
 remotes::install_github("ropensci/wicket@reverse")
-remotes::install_github("ropensci/rinat")
+devtools::install_github("ropensci/rinat")
+update.packages("rinat")
 library(wicket)
 library(rinat)
 
+# load all packages
 Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "rinat", 
               "maptools", "devtools", "wellknown","geojsonsf", "leaflet", 
               "jsonlite", "rgbif", "geojsonio", "bcdata", "rmapshaper", 
