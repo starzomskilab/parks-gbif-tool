@@ -1,6 +1,6 @@
-##
+## ---
 ## DATA PREP AND CLEANING ---------------------------
-## 
+## ---
 # extracting only provincial parks
 prov_parks <- filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>%
   rename_all(tolower)
