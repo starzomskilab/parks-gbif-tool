@@ -1,17 +1,17 @@
 ## ---
-## Using rinat
+## Using rinat ----------------------------------------------------------------
 ## ---
 ## Retrieve info about a project
-sample <- get_inat_obs_project("montague-provincial-park", 
+sample <- get_inat_obs_project("goldstream-provincial-park", 
                                    type = "info", raw = F)
+
 ## Now retrieve all the observations for that project
 sample <- get_inat_obs_project(sample$id, type = "observations", 
                                    raw = T)
 
+# Trying to do the same as above for umbrella projects 
 allparks <- get_inat_obs_project("bc-parks", type = "info", raw = T)
 # allparks <- get_inat_obs_project(allparks$id)
-
-
 
 ## Find user
 starzom <- get_inat_obs_user("bstarzomski", maxresults = 15)
