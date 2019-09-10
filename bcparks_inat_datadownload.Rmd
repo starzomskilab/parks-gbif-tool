@@ -1,5 +1,5 @@
 ---
-title: 'BC Parks iNaturalist Project: Data Access Part 1'
+title: 'BC Parks iNaturalist Project: Accessing Data'
 author: "Julie Galloway"
 date: '2019-06-20'
 output: html_document
@@ -19,75 +19,41 @@ lapply(Packages, library, character.only = TRUE)
 
 ## Setup
 
-Packages you may need to download for this exercise include the following:
-
-```{r libraries}
-library(tidyverse)
-library(dplyr)
-library(rgbif)
-library(rinat)
-library(wellknown)
-library(rmapshaper)
-# remotes::install_github("bcgov/bcdata")
-```
-
 There are two main methods to access iNaturalist data through R. 
 
 * The `rinat` package (https://github.com/ropensci/rinat). 
 * The `rgbif` package, which queries the Global Biodiversity Information Facility (GBIF) databases to find all biodiversity data within the park boundary.
 
-To use `rgbif`, you will need to provide the username, password, and email address associated with your GBIF account. You can add these details as part of your data query, or set them as environment variables in R. See below:
+Packages you may need to download for this exercise include the following:
 
-```{r passwords}
-Sys.setenv(GBIF_USER = "username")
-Sys.setenv(GBIF_PWD = "password")
-Sys.setenv(GBIF_EMAIL = "email@uvic.ca")
+```{r libraries}
+# For the rinat method:
+library(tidyverse)
+library(rinat)
+
+# For the rgbif method:
+library(rgbif)
+library(wellknown)
+library(rmapshaper)
+# remotes::install_github("bcgov/bcdata")
 ```
 
-## Obtaining Park Boundary Outlines
+## Method 1: Using the `rinat` Package
 
-A shapefile of BC park boundaries can be obtained from the BC Data Catalogue through the `bcdata` package.
-
-```{r parks}
-# Download BC parks data as sf
-parks <- bcdc_get_data("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
-```
-
-Since this file contains data on all protected areas and parks in the province, we can narrow it down to provincial parks using. 
-
-```{r filter}
-# extracting only provincial parks
-prov_parks <- dplyr::filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>%
-  rename_all(tolower)
-```
-
-The geometry of the BC parks shapefile is very complex; this makes processing slow. To use `rgbif` later, we will need to convert these polygons to text files, and the length of the text files would exceed the length that rgbif accepts. To fix this, we can simplify the geometry using `rmapshaper`. This reduces the complexity and removes extra vertices.
-
-``` {r simplify, echo = T}
-# simplify parks geometry
-prov_parks <- ms_simplify(prov_parks, keep = 0.05)
-plot(prov_parks[15])
-```
-
-## Using the `rinat` Package
-
-The `rinat` package is a handy way to pull datasets from iNaturalist. Unlike `rgbif`, it does not require a username/password. Users are reporting problems when trying to download data for an umbrella project (like "bc-parks"), but for individual projects we can retrieve data this way. 
+The `rinat` package is a handy way to pull datasets from iNaturalist. Unlike `rgbif`, it does not require a username/password. I'm running into issues when downloading data for an umbrella project (like "bc-parks"), but for individual projects we can retrieve data this way. 
 
 ``` {r rinat, echo = T}
 ## Retrieve info about a project
 strathcona <- get_inat_obs_project("strathcona-provincial-park", type = "info", 
-                                  raw = F)
+                                  raw = T)
 ```
 
 ``` {r rinat download, echo = T}
 ## Now retrieve all the taxa counted in that project
-strathcona <- get_inat_obs_project(strathcona$taxa_count, 
-                                 type = "observations", raw = F)
+strathcona <- get_inat_obs_project(strathcona$id, 
+                                 type = "observations", raw = T)
 ```
-
-Using `strathcona$id` should retrieve all observations, but with large datasets this sometimes fails; I'm working on a fix to that now. 
-
-You can also retrieve all observations from a particular user with `rinat`. This could be good to make a database of observations for each of the team members.
+You can also retrieve all observations from a particular user with `rinat`. This could be good to make a database of observations for each of the core team members.
 
 ``` {r user example}
 starzom <- get_inat_obs_user("bstarzomski", maxresults = 15)
@@ -103,3 +69,43 @@ bbox <- c(48.41931, -130.1369, 55.33395, -122.6331 )
 # Add a query 
 query <- get_inat_obs(query = "fox", bounds = bbox, maxresults = 15)
 ```
+
+## Method 2: Using the `rgbif` Package
+To use `rgbif`, you will need to provide the username, password, and email address associated with your GBIF account. You can add these details as part of your data query, or set them as environment variables in R. See below:
+
+```{r passwords}
+Sys.setenv(GBIF_USER = "username")
+Sys.setenv(GBIF_PWD = "password")
+Sys.setenv(GBIF_EMAIL = "email@uvic.ca")
+```
+
+### Obtaining Park Boundary Outlines
+
+A shapefile of BC park boundaries can be obtained from the BC Data Catalogue through the `bcdata` package.
+
+```{r parks}
+# Find info about the parks dataset
+bcdc_query_geodata("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
+# Retrieve data
+parks <- bcdc_get_data(record = '1130248f-f1a3-4956-8b2e-38d29d3e4af7', 
+                       resource = 'c1bf2c35-3775-4b80-aa06-aa14630132f1', 
+                       crs = 4326)
+```
+
+Since this file contains data on all protected areas and parks in the province, we can narrow it down to provincial parks using the following. 
+
+```{r filter}
+# extracting only provincial parks
+prov_parks <- dplyr::filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>%
+  rename_all(tolower)
+```
+
+The geometry of the BC parks shapefile is very complex; this makes processing slow. To use `rgbif` later, we will need to convert these polygons to text files, and the length of the text files would exceed the length that rgbif accepts. To fix this, we can simplify the geometry using `rmapshaper`. This reduces the complexity and removes extra vertices.
+
+``` {r simplify, echo = T}
+# simplify parks geometry
+prov_parks <- ms_simplify(prov_parks, keep = 0.05)
+plot(prov_parks[15])
+```
+
+In part two of this tutorial, we'll go through how to convert sf polygons into wkt files for rgbif data requests, and how to request data from rgbif. 
