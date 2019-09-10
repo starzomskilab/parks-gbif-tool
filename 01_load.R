@@ -1,6 +1,6 @@
-##
+## --- 
 ## BCPARKS/RGBIF SPATIAL DATA ACQUISITON TOOL ----------------------
-## 
+## ---
 library(devtools)
 # dev_mode(on = T)
 
@@ -25,7 +25,6 @@ lapply(Packages, library, character.only = TRUE)
 prov_parks <- dplyr::filter(parks, PROTECTED_LANDS_DESIGNATION == "PROVINCIAL PARK") %>%
   rename_all(tolower)
 
-
 ## ENVIRONMENT SETTINGS ----------------------------------------
 ## *Note: Fill in the variables below with your own username/pwd
 ## 
@@ -43,7 +42,9 @@ library(curl)
 # pass in geojson file
 # install.packages("remotes")
 # remotes::install_github("bcgov/bcdata")
-
+bcdc_search()
 # Download BC parks data as sf
 bcdc_query_geodata("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
-parks <- bcdc_get_data("1130248f-f1a3-4956-8b2e-38d29d3e4af7", crs = 4326)
+parks <- bcdc_get_data(record = '1130248f-f1a3-4956-8b2e-38d29d3e4af7', 
+                       resource = 'c1bf2c35-3775-4b80-aa06-aa14630132f1', 
+                       crs = 4326)
