@@ -1,5 +1,8 @@
 ## ---
-## Queue up download
+##  ----------------------------------------------------------
+## ---
+
+# Queue up download
 queries <- list()
 for (i in seq_along(park_wkts)) {
   queries[[i]] <- occ_download_prep(
