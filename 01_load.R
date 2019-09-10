@@ -15,7 +15,7 @@ library(rinat)
 Packages <- c("spocc", "sf", "tidyverse", "rgbif", "viridis", "rinat", 
               "maptools", "devtools", "wellknown","geojsonsf", "leaflet", 
               "jsonlite", "rgbif", "geojsonio", "bcdata", "rmapshaper", 
-              "RColorBrewer", "RCurl", "bcmaps", "geojson", "wicket")
+              "RColorBrewer", "RCurl", "bcmaps", "geojson", "wicket", "data.table")
 lapply(Packages, library, character.only = TRUE)
 
 # Since this file contains data on all protected areas and parks in the province, 
