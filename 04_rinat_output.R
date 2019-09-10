@@ -2,12 +2,16 @@
 ## Using rinat ----------------------------------------------------------------
 ## ---
 ## Retrieve info about a project
-sample <- get_inat_obs_project("goldstream-provincial-park", 
+strathcona_search <- get_inat_obs_project("strathcona-provincial-park", 
                                    type = "info", raw = F)
 
 ## Now retrieve all the observations for that project
-sample <- get_inat_obs_project(sample$id, type = "observations", 
+strathcona_data <- get_inat_obs_project(strathcona_search$id, type = "observations", 
                                    raw = T)
+strathcona_data <- apply(strathcona_data,2,as.character)
+
+# Write csv
+write.csv(strathcona_data, file = "strathcona.csv", row.names = F)
 
 # Trying to do the same as above for umbrella projects 
 allparks <- get_inat_obs_project("bc-parks", type = "info", raw = T)
